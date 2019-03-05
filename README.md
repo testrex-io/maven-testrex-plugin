@@ -1,1 +1,1 @@
-# maven-testrex-plugin
+# testrex-maven-plugin
