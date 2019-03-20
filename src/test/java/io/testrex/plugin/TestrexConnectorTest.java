@@ -2,6 +2,7 @@ package io.testrex.plugin;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.FileEntity;
@@ -10,8 +11,10 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -69,15 +72,55 @@ public class TestrexConnectorTest {
                 .isEqualTo(testApiUrl + "/projects/" + projectId + "/testsuites");
     }
 
+    @Test
+    public void testSendReportFileFailsOnServerError() throws Exception {
+        File file = new File("test");
+        int projectId = 1;
+
+        Exception connectionRefusedException = new IOException("Connection refused");
+
+        when(mockedHttpClient.execute(any(HttpPost.class))).thenThrow(connectionRefusedException);
+
+        assertThatExceptionOfType(TestrexConnectionException.class)
+                .isThrownBy(() -> testrexConnector.sendReportFile(file, projectId))
+                .withCause(connectionRefusedException);
+    }
+
+    @Test
+    public void testSendReportFileFailsOnInvalidResponseStatus() throws Exception {
+        File file = new File("test");
+        int projectId = 1;
+
+        HttpResponse mockedResponse = getUnsuccessfulMockedResponse();
+
+        when(mockedHttpClient.execute(any(HttpPost.class))).thenReturn(mockedResponse);
+
+        assertThatExceptionOfType(TestrexConnectionException.class)
+                .isThrownBy(() -> testrexConnector.sendReportFile(file, projectId));
+    }
+
+    /**
+     * Returns mock of unsuccessful HttpResponse
+     *
+     * @return unsuccessful HttpResponse
+     */
+    private HttpResponse getUnsuccessfulMockedResponse() {
+        HttpResponse mockedResponse = mock(HttpResponse.class, RETURNS_DEEP_STUBS);
+
+        when(mockedResponse.getStatusLine().getStatusCode()).thenReturn(HttpStatus.SC_BAD_REQUEST);
+
+        return mockedResponse;
+    }
+
     /**
      * Returns mock of success HttpResponse
      *
-     * @return success HttpResponse
+     * @return successful HttpResponse
      */
     private HttpResponse getSuccessfulMockedResponse() {
         HttpResponse mockedResponse = mock(HttpResponse.class, RETURNS_DEEP_STUBS);
 
-        when(mockedResponse.getStatusLine().getStatusCode()).thenReturn(201);
+        when(mockedResponse.getStatusLine().getStatusCode()).thenReturn(HttpStatus.SC_CREATED);
 
         return mockedResponse;
     }

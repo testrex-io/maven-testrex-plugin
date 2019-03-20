@@ -10,6 +10,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Vojtech Sassmann <vojtech.sassmann@gmail.com>
@@ -37,12 +38,34 @@ public class TestrexMojo extends AbstractMojo {
 
     @Override
     public final void execute() throws MojoExecutionException, MojoFailureException {
-        File[] files = getReportFiles();
+        ReportFileLoader fileLoader = new SurefireReportFileLoader();
+        File[] files;
+
+        try {
+            files = fileLoader.loadReportFiles(reportsDirectory);
+        } catch (IOException e) {
+            throw new MojoFailureException("Cannot load surefire report files.", e);
+        }
 
         HttpClient httpClient = HttpClientBuilder.create().build();
         TestrexConnector connector = new TestrexConnectorImpl(url, httpClient);
 
-        for (File file : files) {
+        getLog().info("Found: " + files.length + " report files.");
+
+        sendReportFiles(files, connector);
+    }
+
+    /**
+     * Send given report files via given connector to the Testrex server.
+     *
+     * @param reportFiles report files to be send
+     * @param connector connector to Testrex server
+     * @throws MojoExecutionException when the send operation fails
+     */
+    private void sendReportFiles(final File[] reportFiles, final TestrexConnector connector)
+            throws MojoExecutionException {
+
+        for (File file : reportFiles) {
             String fileName = file.getName();
             getLog().info("Sending file: '" + fileName + "'.");
 
@@ -56,24 +79,5 @@ public class TestrexMojo extends AbstractMojo {
                 throw new MojoExecutionException("Failed to send file.", e);
             }
         }
-    }
-
-    /**
-     * Finds report files in reports directory.
-     *
-     * @return report files
-     * @throws MojoFailureException if the reports directory is invalid
-     */
-    private File[] getReportFiles() throws MojoFailureException {
-        if (reportsDirectory == null) {
-            throw new MojoFailureException("Failed to open surefire report directory.");
-        }
-
-        if (!reportsDirectory.exists()) {
-            getLog().warn("No surefire report files has been found.");
-            return new File[0];
-        }
-
-        return reportsDirectory.listFiles((file, s) -> s.toLowerCase().endsWith(".xml"));
     }
 }

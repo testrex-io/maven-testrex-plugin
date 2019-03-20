@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite tests="2" failures="1" name="test.testproject.SampleTest" time="0.005" errors="0" skipped="0">
+  <properties>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="sun.cpu.isalist" value=""/>
+    <properties>
+      <property name="sun.cpu.isalist" value=""/>
+    </properties>
+  </properties>
+  <testcase classname="test.testproject.SampleTest" name="successfulTest" time="0.002"/>
+</testsuite>
