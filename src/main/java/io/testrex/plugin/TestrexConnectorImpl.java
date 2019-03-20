@@ -1,6 +1,7 @@
 package io.testrex.plugin;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.FileEntity;
@@ -16,11 +17,6 @@ import static org.apache.http.HttpHeaders.USER_AGENT;
  * @author Vojtech Sassmann <vojtech.sassmann@gmail.com>
  */
 public class TestrexConnectorImpl implements TestrexConnector {
-
-    /**
-     * Http created status.
-     */
-    private static final int HTTP_STATUS_CREATED = 201;
 
     /**
      * REST API URL.
@@ -61,7 +57,7 @@ public class TestrexConnectorImpl implements TestrexConnector {
         try {
             HttpResponse response = httpClient.execute(post);
 
-            if (response.getStatusLine().getStatusCode() != HTTP_STATUS_CREATED) {
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED) {
                 throw new TestrexConnectionException("Failed to send file: '" + file.getName() + "'."
                         + " Status code: " + response.getStatusLine().getStatusCode()
                         + ", Message: " + response.getStatusLine().getReasonPhrase());
