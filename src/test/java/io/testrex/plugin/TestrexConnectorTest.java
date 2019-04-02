@@ -6,8 +6,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.FileEntity;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.io.File;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
  *
  * @author Vojtech Sassmann <vojtech.sassmann@gmail.com>
  */
-public class TestrexConnectorTest {
+class TestrexConnectorTest {
 
     /**
      * Testrex connector instance to be tested.
@@ -40,13 +40,13 @@ public class TestrexConnectorTest {
      */
     private HttpClient mockedHttpClient = mock(HttpClient.class);
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         testrexConnector = new TestrexConnectorImpl(testApiUrl, mockedHttpClient);
     }
 
     @Test
-    public void testSendReportFileCorrectly() throws Exception {
+    void testSendReportFileCorrectly() throws Exception {
         File file = new File("test");
         int projectId = 1;
 
@@ -73,7 +73,7 @@ public class TestrexConnectorTest {
     }
 
     @Test
-    public void testSendReportFileFailsOnServerError() throws Exception {
+    void testSendReportFileFailsOnServerError() throws Exception {
         File file = new File("test");
         int projectId = 1;
 
@@ -87,7 +87,7 @@ public class TestrexConnectorTest {
     }
 
     @Test
-    public void testSendReportFileFailsOnInvalidResponseStatus() throws Exception {
+    void testSendReportFileFailsOnInvalidResponseStatus() throws Exception {
         File file = new File("test");
         int projectId = 1;
 
