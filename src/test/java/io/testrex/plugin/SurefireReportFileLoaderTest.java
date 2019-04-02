@@ -1,8 +1,8 @@
 package io.testrex.plugin;
 
 import org.assertj.core.api.Condition;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
  *
  * @author Vojtech Sassmann <vojtech.sassmann@gmail.com>
  */
-public class SurefireReportFileLoaderTest {
+class SurefireReportFileLoaderTest {
 
     /**
      * SurefireReportFileLoader instance for testing.
@@ -30,8 +30,8 @@ public class SurefireReportFileLoaderTest {
     private File mockedReportFileDirectory;
 
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         mockedReportFileDirectory = spy(new File(Objects.requireNonNull(getClass()
                 .getClassLoader()
                 .getResource("./"))
@@ -39,7 +39,7 @@ public class SurefireReportFileLoaderTest {
     }
 
     @Test
-    public void testLoadReportFilesFailsWithNotExistingDirectory() {
+    void testLoadReportFilesFailsWithNotExistingDirectory() {
 
         when(mockedReportFileDirectory.exists()).thenReturn(false);
 
@@ -48,7 +48,7 @@ public class SurefireReportFileLoaderTest {
     }
 
     @Test
-    public void testLoadReportFilesDoesntLoadIncorrectFile() throws Exception {
+    void testLoadReportFilesDoesntLoadIncorrectFile() throws Exception {
         String nameOfIncorrectReportFile = "SomeFile.txt";
 
         when(mockedReportFileDirectory.exists()).thenReturn(true);
@@ -63,7 +63,7 @@ public class SurefireReportFileLoaderTest {
     }
 
     @Test
-    public void testLoadReportFilesDoesntLoadInvalidSurefireReportFile() throws Exception {
+    void testLoadReportFilesDoesntLoadInvalidSurefireReportFile() throws Exception {
         String nameOfIncorrectReportFile = "invalid-surefire-report-file.xml";
 
         File invalidReportFile = new File(Objects.requireNonNull(getClass()
@@ -83,7 +83,7 @@ public class SurefireReportFileLoaderTest {
     }
 
     @Test
-    public void testLoadReportFilesLoadsValidSurefireReportFile() throws Exception {
+    void testLoadReportFilesLoadsValidSurefireReportFile() throws Exception {
         String nameOfIncorrectReportFile = "valid-surefire-report-file.xml";
 
         File invalidReportFile = new File(Objects.requireNonNull(getClass()

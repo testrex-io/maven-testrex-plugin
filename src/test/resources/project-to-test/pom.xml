@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.testrex</groupId>
-  <artifactId>testrex-maven-plugin-test</artifactId>
+  <artifactId>testrex-maven-plugin-test-project</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Test MyMojo</name>
@@ -25,7 +25,7 @@
         <artifactId>testrex-maven-plugin</artifactId>
         <version>1.0-SNAPSHOT</version>
         <configuration>
-          <url>http://localhost:8080</url>
+          <url>http://localhost:8888</url>
           <projectId>1</projectId>
         </configuration>
         <executions>
