@@ -27,13 +27,13 @@ public class TestrexMojo extends AbstractMojo {
     /**
      * Url to Testrex REST API.
      */
-    @Parameter
+    @Parameter(defaultValue = "http://localhost:8080")
     private String url;
 
     /**
      * ID of project in Testrex.
      */
-    @Parameter
+    @Parameter(required = true)
     private int projectId;
 
     @Override

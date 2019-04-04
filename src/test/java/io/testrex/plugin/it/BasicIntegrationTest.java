@@ -27,7 +27,7 @@ class BasicIntegrationTest {
 
     @BeforeAll
     static void startServer() {
-        mockServer = ClientAndServer.startClientAndServer(8888);
+        mockServer = ClientAndServer.startClientAndServer(8080);
     }
 
     @AfterAll
