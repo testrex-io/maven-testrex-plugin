@@ -1,4 +1,4 @@
-package io.testrex.plugin.it;
+package io.testrex.plugin.integration;
 
 import org.apache.http.HttpStatus;
 import org.apache.maven.it.VerificationException;
@@ -18,8 +18,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 /**
  * @author Vojtech Sassmann <vojtech.sassmann@gmail.com>
  */
-class BasicIntegrationTest {
-
+class UnsecuredProjectIntegrationTest {
 
     private Verifier verifier;
 
@@ -27,7 +26,7 @@ class BasicIntegrationTest {
 
     @BeforeAll
     static void startServer() {
-        mockServer = ClientAndServer.startClientAndServer(8080);
+        mockServer = ClientAndServer.startClientAndServer(8180);
     }
 
     @AfterAll
@@ -37,7 +36,7 @@ class BasicIntegrationTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        File testDir = ResourceExtractor.simpleExtractResources(getClass(), "/project-to-test");
+        File testDir = ResourceExtractor.simpleExtractResources(getClass(), "/unsecured-test-project");
 
         verifier = new Verifier(testDir.getAbsolutePath());
         verifier.deleteArtifact("io.testrex", "testrex-maven-plugin-test-project", "1.0-SNAPSHOT", "jar");
@@ -46,6 +45,7 @@ class BasicIntegrationTest {
     @AfterEach
     void tearDown() {
         verifier.resetStreams();
+        mockServer.reset();
     }
 
     @Test

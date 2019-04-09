@@ -1,5 +1,6 @@
-package io.testrex.plugin;
+package io.testrex.plugin.unit;
 
+import io.testrex.plugin.SurefireReportFileLoader;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

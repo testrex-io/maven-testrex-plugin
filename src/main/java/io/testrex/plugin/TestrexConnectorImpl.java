@@ -29,14 +29,33 @@ public class TestrexConnectorImpl implements TestrexConnector {
     private HttpClient httpClient;
 
     /**
-     * Create connector to given url with given HttpClient.
-     *
-     * @param url api URL
-     * @param client HttpClient
+     * Access Token of user.
      */
-    public TestrexConnectorImpl(final String url, final HttpClient client) {
-        this.apiUrl = url;
-        this.httpClient = client;
+    private String accessToken;
+
+    /**
+     * Create connector to secured url with given HttpClient.
+     * The given AccessToken is used in HttpRequest Authorization header.
+     *
+     * @param apiUrl api URL
+     * @param httpClient HttpClient
+     * @param accessToken Access Token
+     */
+    public TestrexConnectorImpl(final String apiUrl, final HttpClient httpClient, final String accessToken) {
+        this.apiUrl = apiUrl;
+        this.httpClient = httpClient;
+        this.accessToken = accessToken;
+    }
+
+    /**
+     * Create connector to unsecured url with given HttpClient.
+     *
+     * @param apiUrl api URL
+     * @param httpClient HttpClient
+     */
+    public TestrexConnectorImpl(final String apiUrl, final HttpClient httpClient) {
+        this.apiUrl = apiUrl;
+        this.httpClient = httpClient;
     }
 
     @Override
@@ -51,6 +70,10 @@ public class TestrexConnectorImpl implements TestrexConnector {
 
         post.setHeader("User-Agent", USER_AGENT);
         post.setHeader("Content-Type", "application/xml");
+
+        if (accessToken != null) {
+            post.setHeader("Authorization", "Bearer " + accessToken);
+        }
 
         post.setEntity(new FileEntity(file));
 
