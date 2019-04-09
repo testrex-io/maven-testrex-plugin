@@ -1,11 +1,15 @@
-package io.testrex.plugin;
+package io.testrex.plugin.unit;
 
+import io.testrex.plugin.TestrexConnectionException;
+import io.testrex.plugin.TestrexConnector;
+import io.testrex.plugin.TestrexConnectorImpl;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.FileEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
